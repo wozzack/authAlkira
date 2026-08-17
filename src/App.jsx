@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
 import MfaPage from "./pages/MfaPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -11,7 +12,14 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/mfa" element={<MfaPage />} />
       <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/protected" element={<ProtectedPage />} />
+      <Route
+        path="/protected"
+        element={
+          <ProtectedRoute>
+            <ProtectedPage />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }
