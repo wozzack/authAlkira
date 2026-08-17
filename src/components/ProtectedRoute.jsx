@@ -4,12 +4,12 @@ import { useAuth } from "../context/AuthContext";
 function ProtectedRoute({ children }) {
   const { status } = useAuth();
 
-  // Only fully-authenticated users may pass.
+  // fully-authenticated users may pass.
   if (status !== "authenticated") {
     return <Navigate to="/login" replace />;
   }
 
-  // Authenticated — render whatever this route was protecting.
+  // render whatever this route was protecting.
   return children;
 }
 

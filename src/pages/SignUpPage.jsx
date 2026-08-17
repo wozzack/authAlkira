@@ -7,8 +7,7 @@ function SignUpPage() {
   const [submitted, setSubmitted] = useState(false);
 
   function handleSubmit() {
-    // Stub: full registration is out of scope for this exercise.
-    // In a real app this would call a backend to create the account.
+    // full registration is out of scope for this exercise.
     setSubmitted(true);
   }
 

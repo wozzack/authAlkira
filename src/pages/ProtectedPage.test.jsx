@@ -3,7 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import ProtectedPage from "./ProtectedPage";
 import { AuthContext } from "../context/AuthContext";
 
-// Helper: render ProtectedPage with a fake auth value for a given role.
+// render ProtectedPage with a fake auth value for a given role
 function renderWithRole(role) {
   const value = {
     user: { email: "test@example.com", role },

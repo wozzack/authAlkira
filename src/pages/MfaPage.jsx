@@ -9,7 +9,7 @@ function MfaPage() {
   const { status, verifyMfa } = useAuth();
   const navigate = useNavigate();
 
-  // Guard: you shouldn't be on this screen unless you've passed step 1.
+  // you shouldn't be on this screen unless you've passed step 1.
   if (status === "unauthenticated") {
     return <Navigate to="/login" replace />;
   }

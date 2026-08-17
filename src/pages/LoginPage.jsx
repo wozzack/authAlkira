@@ -12,7 +12,7 @@ function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  // Validate the fields. Returns an errors object (empty = all good).
+  // validate the fields returns an errors object (empty = all good).
   function validate() {
     const nextErrors = {};
 
@@ -37,12 +37,12 @@ function LoginPage() {
     const nextErrors = validateLogin(email, password);
     setErrors(nextErrors);
 
-    // If there are any validation errors, stop here.
+    // if there are any validation errors, stop here.
     if (Object.keys(nextErrors).length > 0) {
       return;
     }
 
-    // Fields are valid — try to log in via the context.
+    // fields are valid try to log in via the context.
     const result = login(email, password);
     if (result.success) {
       navigate("/mfa"); // advance to the MFA screen
