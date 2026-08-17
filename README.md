@@ -52,14 +52,13 @@ Worth poking at:
 
 ## How it's put together
 
-src/
-main.jsx entry wraps everything in Router + AuthProvider
-App.jsx routes
-context/AuthContext.jsx auth state + login / verifyMfa / logout
-components/ProtectedRoute.jsx guard for authenticated-only routes
-pages/ one file per screen
-data/mockUsers.js fake users + MFA code
-utils/validation.js login validation (pulled out so it's testable)
+- src/main.jsx entry wraps everything in Router + AuthProvider
+- App.jsx routes
+- context/AuthContext.jsx auth state + login / verifyMfa / logout
+- components/ProtectedRoute.jsx guard for authenticated-only routes
+- pages/ one file per screen
+- data/mockUsers.js fake users + MFA code
+- utils/validation.js login validation (pulled out so it's testable)
 
 ## Decisions worth explaining
 
