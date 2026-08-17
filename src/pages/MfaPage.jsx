@@ -35,7 +35,7 @@ function MfaPage() {
       <div className="card">
         <h1>Verification</h1>
         <p className="subtitle">
-          Enter the 6-digit code. For this demo, use 123456.
+          Enter the 6-digit code. For this demo, use 666666.
         </p>
 
         <div className="field">
