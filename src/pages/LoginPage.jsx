@@ -52,40 +52,41 @@ function LoginPage() {
   }
 
   return (
-    <div style={{ maxWidth: 320, margin: "40px auto", fontFamily: "sans-serif" }}>
-      <h1>Login</h1>
+    <div className="page">
+      <div className="card">
+        <h1>Sign in</h1>
+        <p className="subtitle">Use your account to continue.</p>
 
-      <div style={{ marginBottom: 12 }}>
-        <label>
-          Email
+        <div className="field">
+          <label>Email</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-        </label>
-        {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
-      </div>
+          {errors.email && <p className="error">{errors.email}</p>}
+        </div>
 
-      <div style={{ marginBottom: 12 }}>
-        <label>
-          Password
+        <div className="field">
+          <label>Password</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        </label>
-        {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
+          {errors.password && <p className="error">{errors.password}</p>}
+        </div>
+
+        {authError && <p className="form-error">{authError}</p>}
+
+        <button className="btn" onClick={handleSubmit}>
+          Sign in
+        </button>
+
+        <p className="link-row">
+          Don't have an account? <Link to="/signup">Sign up</Link>
+        </p>
       </div>
-
-      {authError && <p style={{ color: "red" }}>{authError}</p>}
-
-      <button onClick={handleSubmit}>Log in</button>
-
-      <p style={{ marginTop: 16 }}>
-        Don't have an account? <Link to="/signup">Sign up</Link>
-      </p>
     </div>
   );
 }

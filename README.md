@@ -1,139 +1,105 @@
-# Login + MFA Authentication Exercise
+# Login + MFA
 
-A small React application demonstrating a login flow with multi-factor
-authentication, form validation, and role-based access control. Built as a
-take-home exercise. There is no backend — users and the MFA code are mocked.
+A small React app: log in, pass a mock MFA step, land on a protected screen
+whose actions depend on your role. No backend as the users and the MFA code are
+faked.
 
-## Technologies Used
+## Stack
 
-- **React** (with Vite) — component-based UI and fast dev tooling.
-- **React Router** (`react-router-dom`) — client-side routing between the
-  login, MFA, sign-up, and protected screens.
-- **React Context** — app-wide authentication state (who is logged in, which
-  step of the flow they're on, and their role).
-- **Vitest** + **React Testing Library** — unit and component tests.
+- React + Vite
+- React Router for moving between screens
+- React Context for auth state (who's logged in, what step they're at, their role)
+- Vitest + React Testing Library for tests
 
-No component/UI library was used; styling is minimal and inline, to keep the
-focus on structure and behavior rather than visual polish.
+I skipped a component library and kept styling minimal on purpose, wanted the
+time to go into the auth logic and structure, not CSS.
 
-## Setup / Install
+## Running it
 
-Requires Node.js (v18 or later).
+Needs Node 18+.
 
 ```bash
-git clone <your-repo-url>
-cd alkira-auth
 npm install
-```
-
-## Running Locally
-
-```bash
 npm run dev
 ```
 
-Then open the URL printed in the terminal (typically http://localhost:5173).
+Open the URL it prints (usually http://localhost:5173).
 
-## Running Tests
+Tests:
 
 ```bash
 npm test
 ```
 
-## Mock Users & Roles
+## Logging in
 
-Two mock users are defined in `src/data/mockUsers.js`:
+Two mock users live in `src/data/mockUsers.js`:
 
-| Email               | Password      | Role         |
-| ------------------- | ------------- | ------------ |
-| alice@example.com   | password123   | read-write   |
-| bob@example.com     | password123   | read-only    |
+| Email             | Password    | Role       |
+| ----------------- | ----------- | ---------- |
+| alice@example.com | password | read-write |
+| bob@example.com   | password | read-only  |
 
-The mock MFA code (for either user) is: **123456**
+MFA code for both: **666666**
 
-## How to Test the Login / MFA Flow
+Log in, enter the code, and you're on the dashboard. Alice can edit; Bob can't (the edit button is hidden for him and save is disabled). Log out to switch users.
 
-1. Start the app (`npm run dev`) and go to the login screen.
-2. Log in as **alice@example.com** / **password123** (read-write) or
-   **bob@example.com** / **password123** (read-only).
-3. On the MFA screen, enter the code **123456**.
-4. You'll land on the protected dashboard.
-   - As **Alice** (read-write): the "Edit" button is visible and "Save
-     changes" is enabled.
-   - As **Bob** (read-only): the "Edit" button is hidden and "Save changes"
-     is disabled.
-5. Use "Log out" to return to login and try the other user.
+Worth poking at:
+- Empty or malformed login fields → field errors
+- Right format, wrong credentials → auth error
+- Wrong MFA code → MFA error
+- Type `/protected` in the URL while logged out → you get bounced to login
 
-Things worth trying to see validation and access control:
-- Submit the login form empty, or with a malformed email / short password, to
-  see field-level error messages.
-- Enter valid-format but incorrect credentials to see an authentication error.
-- Enter a wrong MFA code to see the MFA error.
-- While logged out, type `/protected` directly in the URL bar — you'll be
-  redirected to login.
-
-## Project Structure
+## How it's put together
 
 src/
-main.jsx App entry; wraps app in Router + AuthProvider
-App.jsx Route definitions
-context/AuthContext.jsx Auth state + login/verifyMfa/logout logic
-components/ProtectedRoute.jsx Route guard for authenticated-only screens
-pages/ One component per screen
-LoginPage.jsx
-MfaPage.jsx
-SignUpPage.jsx
-ProtectedPage.jsx
-data/mockUsers.js Mock users and MFA code
-utils/validation.js Pure login-validation logic
+main.jsx entry wraps everything in Router + AuthProvider
+App.jsx routes
+context/AuthContext.jsx auth state + login / verifyMfa / logout
+components/ProtectedRoute.jsx guard for authenticated-only routes
+pages/ one file per screen
+data/mockUsers.js fake users + MFA code
+utils/validation.js login validation (pulled out so it's testable)
 
-## Key Design Decisions
+## Decisions worth explaining
 
-- **Authentication modeled as a three-state machine.** A user is
-  `unauthenticated`, `awaitingMfa`, or `authenticated`. Login advances the
-  first transition; a correct MFA code advances the second. This made the
-  access rules explicit and easy to reason about.
+The auth flow is basically a three-state thing: unauthenticated → awaiting MFA →
+authenticated. Login moves you to the second state, a correct code to the third.
+Writing it that way made the "who can see what" rules obvious.
 
-- **Auth state lives in a single React Context.** The login, MFA, and
-  protected screens all need to agree on the same auth facts, so that state is
-  centralized rather than duplicated. A small `useAuth()` hook keeps access to
-  it concise.
+All the auth state sits in one Context because three different screens need to
+agree on it. There's a little `useAuth()` hook so screens grab it in one line.
 
-- **Logic separated from UI.** The context owns credential/MFA checking and
-  state transitions; screens own display and validation messaging. Login
-  validation was extracted into a pure function (`utils/validation.js`) so it
-  can be tested in isolation without rendering.
+I kept the logic and the UI apart: the context decides whether credentials/codes
+are valid and owns the state; screens just handle display and error messages.
+Validation got pulled into its own plain function so I could test it without
+rendering anything.
 
-- **A reusable `ProtectedRoute` wrapper** guards authenticated-only routes,
-  rather than repeating the same auth check inside each screen. It requires the
-  terminal `authenticated` state, so a user who has passed login but not MFA is
-  also redirected.
+`ProtectedRoute` is one wrapper instead of the same auth check copy-pasted into
+every screen. It insists on the fully-authenticated state, so someone who logged
+in but skipped MFA still gets redirected.
 
-- **Role-based access shown two ways.** On the protected screen, the "Edit"
-  action is *hidden* for read-only users while the "Save" action is *disabled*.
-  Both are valid approaches with a UX trade-off (hiding removes the option
-  entirely; disabling keeps it discoverable), so both are demonstrated.
+For roles I did both approaches the brief mentioned, edit is *hidden* for
+read-only, Save is *disabled*. They're both fine; hiding is cleaner but disabling
+lets the user see the action exists. Seemed worth showing I'd thought about the
+difference.
 
-- **Testing was focused, not exhaustive.** Three areas carry the most risk and
-  map directly to requirements: input validation, role-based rendering, and
-  route protection. Each has a targeted test rather than chasing broad coverage.
+Tests are focused rather than thorough on purpose; validation, role rendering,
+and the route guard, since those are the parts most likely to break and the ones
+the brief actually cares about.
 
 ## Assumptions
 
-- Full user registration was out of scope per the brief, so sign-up is a
-  navigable stub that does not create an account.
-- Mock users and a fixed MFA code are acceptable stand-ins for a real
-  authentication backend.
+- Sign-up is a stub that goes to its own screen but doesn't create anything, the
+  brief said full registration wasn't needed.
+- Mock users + a fixed code stand in for a real auth backend.
 
-## Known Limitations
+## Known limitations
 
-- **No session persistence.** Auth state is held in memory, so refreshing the
-  browser returns the user to the login screen. A real app would persist a
-  session token (e.g. in an httpOnly cookie) and restore state on load.
-- **No real security.** Credentials and the MFA code are checked client-side
-  against hardcoded mock data; this is for demonstration only and is not a
-  secure auth implementation.
-- **Sign-up is a stub** — it collects input but does not register a user.
-- **Validation runs on submit**, not as the user types. Validating on blur or
-  after the first submit attempt would be a reasonable UX improvement.
-- **The sign-up fields are not validated**, since they are inert.
+- No persistence: auth is in memory, so a refresh dumps you back to login. Real
+  version would store a token and rehydrate on load.
+- Not actually secure: Everything's checked client-side against hardcoded data;
+  this is a demo of the flow, not real auth.
+- Sign-up doesn't register anyone and its fields aren't validated.
+- Login validates on submit, not as you type, validating on blur would be nicer.
+

@@ -31,23 +31,27 @@ function MfaPage() {
   }
 
   return (
-    <div style={{ maxWidth: 320, margin: "40px auto", fontFamily: "sans-serif" }}>
-      <h1>Two-Factor Authentication</h1>
-      <p>Enter the 6-digit code. (For this demo, use <strong>123456</strong>.)</p>
+    <div className="page">
+      <div className="card">
+        <h1>Verification</h1>
+        <p className="subtitle">
+          Enter the 6-digit code. For this demo, use 123456.
+        </p>
 
-      <div style={{ marginBottom: 12 }}>
-        <label>
-          Code
+        <div className="field">
+          <label>Code</label>
           <input
             type="text"
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
-        </label>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-      </div>
+          {error && <p className="error">{error}</p>}
+        </div>
 
-      <button onClick={handleSubmit}>Verify</button>
+        <button className="btn" onClick={handleSubmit}>
+          Verify
+        </button>
+      </div>
     </div>
   );
 }

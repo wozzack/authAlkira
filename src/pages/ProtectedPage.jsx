@@ -13,35 +13,35 @@ function ProtectedPage() {
   }
 
   return (
-    <div style={{ maxWidth: 480, margin: "40px auto", fontFamily: "sans-serif" }}>
-      <h1>Protected Dashboard</h1>
-      <p>
-        Signed in as <strong>{user.email}</strong> — role:{" "}
-        <strong>{user.role}</strong>
-      </p>
-
-      <ul>
-        <li>Document A</li>
-        <li>Document B</li>
-        <li>Document C</li>
-      </ul>
-
-      {/* Role-based access control, two ways: */}
-
-      {/* 1. Hidden entirely for read-only users */}
-      {canEdit && <button>Edit</button>}
-
-      {/* 2. Always visible, but disabled for read-only users */}
-      <button disabled={!canEdit}>Save changes</button>
-
-      {!canEdit && (
-        <p style={{ color: "#666", marginTop: 8 }}>
-          You have read-only access. Editing is disabled.
+    <div className="page">
+      <div className="card card--wide">
+        <h1>Dashboard</h1>
+        <p className="meta">
+          {user.email} &nbsp;·&nbsp; <span className="badge">{user.role}</span>
         </p>
-      )}
 
-      <hr style={{ margin: "24px 0" }} />
-      <button onClick={handleLogout}>Log out</button>
+        <ul className="doc-list">
+          <li>Document A</li>
+          <li>Document B</li>
+          <li>Document C</li>
+        </ul>
+
+        <div className="actions">
+          {canEdit && <button className="btn-secondary">Edit</button>}
+          <button className="btn-secondary" disabled={!canEdit}>
+            Save changes
+          </button>
+        </div>
+
+        {!canEdit && (
+          <p className="subtitle">Read-only access — editing is disabled.</p>
+        )}
+
+        <hr className="divider" />
+        <button className="btn-secondary" onClick={handleLogout}>
+          Log out
+        </button>
+      </div>
     </div>
   );
 }

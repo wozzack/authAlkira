@@ -13,47 +13,51 @@ function SignUpPage() {
   }
 
   return (
-    <div style={{ maxWidth: 320, margin: "40px auto", fontFamily: "sans-serif" }}>
-      <h1>Sign Up</h1>
+    <div className="page">
+      <div className="card">
+        <h1>Create account</h1>
 
-      {submitted ? (
-        <p>
-          Thanks for signing up! (This is a stub — no account was created.){" "}
-          <Link to="/login">Back to login</Link>
-        </p>
-      ) : (
-        <>
-          <p>Create an account.</p>
+        {submitted ? (
+          <>
+            <p className="subtitle">
+              Thanks for signing up. This is a stub — no account was created.
+            </p>
+            <p className="link-row">
+              <Link to="/login">Back to sign in</Link>
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="subtitle">Sign up to get started.</p>
 
-          <div style={{ marginBottom: 12 }}>
-            <label>
-              Email
+            <div className="field">
+              <label>Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-            </label>
-          </div>
+            </div>
 
-          <div style={{ marginBottom: 12 }}>
-            <label>
-              Password
+            <div className="field">
+              <label>Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-            </label>
-          </div>
+            </div>
 
-          <button onClick={handleSubmit}>Sign up</button>
+            <button className="btn" onClick={handleSubmit}>
+              Sign up
+            </button>
 
-          <p style={{ marginTop: 16 }}>
-            Already have an account? <Link to="/login">Log in</Link>
-          </p>
-        </>
-      )}
+            <p className="link-row">
+              Already have an account? <Link to="/login">Sign in</Link>
+            </p>
+          </>
+        )}
+      </div>
     </div>
   );
 }
